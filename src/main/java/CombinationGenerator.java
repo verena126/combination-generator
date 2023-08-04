@@ -77,50 +77,19 @@ public class CombinationGenerator {
 
         // Array with more than two elements
         if (arr.length > 2 && currentLimit > firstIndex) {
-            if (arr[arr.length - firstIndex] >= currentLimit / 3 && arr.length > firstIndex) { //Anstatt max =currentLimit
-                // System.err.println(toString(arr));
-                firstIndex++;
-                arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
 
+
+                while (arr[arr.length - firstIndex] >= currentLimit - 2 && arr.length > firstIndex) {
+                    firstIndex++;
+                    arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
+                }
                 if (arr[arr.length - firstIndex] < currentLimit) {
-                    while (firstIndex > 2) {//Anstatt max =currentLimit
+                    while (firstIndex > 2) {
                         firstIndex--;
                         arr[arr.length - firstIndex] = 1;
                     }
                     return generate(firstIndex);
-
                 }
-            }
-            if (arr.length >= firstIndex && arr[arr.length - firstIndex] < currentLimit / 2) {
-
-                arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
-
-                return generate(firstIndex);
-            } else if (arr.length > firstIndex && arr[arr.length - firstIndex] == currentLimit) {
-            // Array größer gleich 4
-                    firstIndex += 1;
-                    System.out.println(arr.length - firstIndex);
-                    if (arr[arr.length - firstIndex] < currentLimit / 2) {
-                       // System.err.println(toString(arr));
-                        arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
-                       // System.err.println(toString(arr));
-                        if (arr.length == 4) {
-                            int i = firstIndex;
-                            while (i >= 2) { //für 4er Array benötigt!!
-                                i--;
-                                arr[arr.length - i] = 1;
-                            }
-                        }
-                        if (firstIndex < currentLimit) {
-                            if (arr.length == 4) {
-                                firstIndex -= 2;
-                            }
-
-                            return generate(firstIndex);
-                    }
-
-                }
-            }
         }
         currentLimit++;
         for (int i = 0; i < arr.length; i++) {
@@ -140,7 +109,7 @@ public class CombinationGenerator {
             }
         }
 
-        if (arr.length >= firstIndex ) {
+        if (arr.length >= firstIndex) {
             if (res[0] != 0) {
                 return res;
             }

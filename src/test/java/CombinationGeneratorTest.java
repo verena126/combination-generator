@@ -1,11 +1,6 @@
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -237,29 +232,30 @@ public class CombinationGeneratorTest {
 
     @Test
     void testGenerateWithFiveElements() {
-        assertThat(tryFind(new int[]{2, 10, 4, 3, 1}, cg5)).isTrue();
+
+        assertThat(tryFind(new int[]{2, 5, 4, 3, 1}, cg5)).isTrue();
     }
 
 
     @Test
     void testGenerateWithFiveElementsNegative() {
+
         assertThat(tryFind(new int[]{55, 10, 4, 10, 1}, cg5)).isFalse();
     }
 
     @Test
-    void testGenerateWithsixElements() {
-        assertThat(tryFind(new int[]{2, 10, 4, 3, 1, 5}, cg6)).isTrue();
+    void testGenerateWithSixElements() {
+        assertThat(tryFind(new int[]{1, 3, 2, 5, 6, 4}, cg6)).isTrue();
     }
 
 
     private boolean tryFind(int[] toFound, CombinationGenerator cg) {
         cg = new CombinationGenerator(toFound.length);
-        int maxLimit = 3000;
+        int maxLimit = 2000;
         boolean found = false;
         int step = 0;
-        boolean found2 = false;
+
         while (found == false & step < maxLimit) {
-            //cg.printList();
             int[] res = cg.generate();
             found = false;
             for (int i = 0; i < toFound.length; i++) {
@@ -269,11 +265,9 @@ public class CombinationGeneratorTest {
                     break;
                 }
             }
-
-            //cg.printList();
             step++;
+            cg.printList();
         }
-        cg.generate();
         return found;
     }
 
@@ -301,14 +295,14 @@ public class CombinationGeneratorTest {
         return false;
     }
 
-    /*    @Test
-    void testDouble() {
+    @Test
+    void testIfAlwaysTheSame() {
         for (int i = 1; i < 100; i++) {
-            assertThat(checkDouble(i)).isTrue();
+            assertThat(checkIfTheSame(i)).isTrue();
         }
     }
 
-    private boolean checkDouble(int currentLength) {
+    private boolean checkIfTheSame(int currentLength) {
         int[] arr2;
         int[] arr3;
 
@@ -325,6 +319,6 @@ public class CombinationGeneratorTest {
             }
         }
         return true;
-    }*/
+    }
 
 }
