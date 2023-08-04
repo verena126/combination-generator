@@ -28,16 +28,12 @@ public class CombinationGenerator {
             list.add(toString(arr));
             return arr;
         } else {
-            if (size > 4) {
-                return generate(size - 1);
-            }
             return generate(2);
         }
     }
 
 
     private int[] generate(int firstIndex) {
-        int max = 3;
         int[] res = new int[arr.length];
         if (arr.length >= 2) {
             arr[arr.length - 2] = currentLimit;
@@ -77,8 +73,6 @@ public class CombinationGenerator {
 
         // Array with more than two elements
         if (arr.length > 2 && currentLimit > firstIndex) {
-
-
                 while (arr[arr.length - firstIndex] >= currentLimit - 2 && arr.length > firstIndex) {
                     firstIndex++;
                     arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
@@ -102,7 +96,7 @@ public class CombinationGenerator {
             firstIndex = 4;
         }
 
-        if (arr.length == 3 && currentLimit < max + 1) {
+        if (arr.length == 3 && currentLimit < 4 ) {
             arr[0] = 1;
             if (res[0] != 0) {
                 return generate(firstIndex);
@@ -171,5 +165,4 @@ public class CombinationGenerator {
         }
         System.out.println(printedList);
     }
-
 }
