@@ -25,21 +25,25 @@ public class CombinationGenerator {
 
     public int[] generate() {
         if (list.size() == 0) {
-            list.add(arr.toString());
+            list.add(toString(arr));
             return arr;
         } else {
-            int[] arr = generate(2);
-            return arr;
+            if (size > 4) {
+                return generate(size - 1);
+            }
+            return generate(2);
         }
     }
 
 
     private int[] generate(int firstIndex) {
-        int max = 8;
+        int max = 3;
         int[] res = new int[arr.length];
         if (arr.length >= 2) {
             arr[arr.length - 2] = currentLimit;
         }
+
+        // Array der Länge 1
         if (arr.length == 1) {
             for (int i = 1; i < currentLimit + 1; i++) {
                 arr[arr.length - 1] = i;
@@ -71,57 +75,76 @@ public class CombinationGenerator {
             }
         }
 
-        //for the last two digits of the Array
-
         // Array with more than two elements
-        if (arr.length > 2 && currentLimit > max - 2) {
-            if (arr[arr.length - firstIndex] >= max - 1 && arr.length > firstIndex) {
-
+        if (arr.length > 2 && currentLimit > firstIndex) {
+            if (arr[arr.length - firstIndex] >= currentLimit / 3 && arr.length > firstIndex) { //Anstatt max =currentLimit
+                // System.err.println(toString(arr));
                 firstIndex++;
                 arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
 
-                if (arr[arr.length - firstIndex] < max + 1) {
-                    firstIndex--;
-                    arr[arr.length - firstIndex] = 1;
-                    generate(firstIndex);
+                if (arr[arr.length - firstIndex] < currentLimit) {
+                    while (firstIndex > 2) {//Anstatt max =currentLimit
+                        firstIndex--;
+                        arr[arr.length - firstIndex] = 1;
+                    }
+                    return generate(firstIndex);
+
                 }
             }
-            if (arr.length >= firstIndex && arr[arr.length - firstIndex] < currentLimit) {
+            if (arr.length >= firstIndex && arr[arr.length - firstIndex] < currentLimit / 2) {
+
                 arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
-                generate(firstIndex);
+
+                return generate(firstIndex);
             } else if (arr.length > firstIndex && arr[arr.length - firstIndex] == currentLimit) {
-                if (arr.length > 4) {
-                    firstIndex += 2;
-                    if (arr[arr.length - firstIndex] < max) {
+            // Array größer gleich 4
+                    firstIndex += 1;
+                    System.out.println(arr.length - firstIndex);
+                    if (arr[arr.length - firstIndex] < currentLimit / 2) {
+                       // System.err.println(toString(arr));
                         arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
-                        int i = firstIndex;
-                        while (i >= 2) {
-                            i--;
-                            arr[arr.length - i] = 1;
-                        }
-                        if (firstIndex < 6) {
-                            firstIndex -= 2;
-                            if (res[0] != 0) {
-                                generate(firstIndex);
+                       // System.err.println(toString(arr));
+                        if (arr.length == 4) {
+                            int i = firstIndex;
+                            while (i >= 2) { //für 4er Array benötigt!!
+                                i--;
+                                arr[arr.length - i] = 1;
                             }
                         }
+                        if (firstIndex < currentLimit) {
+                            if (arr.length == 4) {
+                                firstIndex -= 2;
+                            }
+
+                            return generate(firstIndex);
                     }
+
                 }
             }
         }
         currentLimit++;
+        for (int i = 0; i < arr.length; i++) {
+            arr[i] = 1;
+
+        }
+        if (size > 3) {
+            firstIndex = 2;
+        } else if (size == 3) {
+            firstIndex = 4;
+        }
+
         if (arr.length == 3 && currentLimit < max + 1) {
             arr[0] = 1;
             if (res[0] != 0) {
-                generate(firstIndex);
+                return generate(firstIndex);
             }
         }
 
-        if (currentLimit < max + 1 && arr.length >= firstIndex && arr[arr.length - firstIndex] < max - 1) {
+        if (arr.length >= firstIndex ) {
             if (res[0] != 0) {
                 return res;
             }
-            generate(firstIndex);
+            return generate(firstIndex);
         }
 
         if (res[0] != 0) {
@@ -129,6 +152,7 @@ public class CombinationGenerator {
         } else {
             return generate(firstIndex);
         }
+
     }
 
     private boolean checkInList(int[] arr) {
