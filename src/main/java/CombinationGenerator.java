@@ -1,133 +1,143 @@
 import java.util.ArrayList;
 
+import java.util.Arrays;
 import java.util.List;
 
 
 public class CombinationGenerator {
     private final int size;
-    private List<String> list;
-    private int currentLimit;
+
+
     private int[] arr;
+    private int last;
+    private int secondLast;
+    private int currentLimit;
+    private int[] currentArr;
+    private int currentIndex;
+    private boolean goDown = false;
 
 
     public CombinationGenerator(int size) {
         this.size = size;
-        list = new ArrayList<>();
+        currentLimit = 1;
+        last = size;
+        secondLast = size - 1;
         arr = setUpArray(size);
-
-        if (size == 2) {
-            currentLimit = 1;
-        } else {
-            currentLimit = 2;
-        }
+        currentArr = new int[]{1, 2};
+        currentIndex = 3;
     }
 
 
     public int[] generate() {
-        if (list.size() == 0) {
-            list.add(toString(arr));
-            return arr;
-        } else {
-            return generate(2);
-        }
+        return generateNumbers();
+
     }
 
 
-    private int[] generate(int firstIndex) {
-        int[] res = new int[arr.length];
-        if (arr.length >= 2) {
-            arr[arr.length - 2] = currentLimit;
-        }
+    private int[] generateNumbers() {
 
-        // Array der Länge 1
+
+        // Array with length == 1
         if (arr.length == 1) {
-            for (int i = 1; i < currentLimit + 1; i++) {
-                arr[arr.length - 1] = i;
-                if (checkNumber(arr) == false) {
-
-                    if (checkInList(arr) == false) {
-                        list.add(toString(arr));
-                        res = arr;
-                        return res;
-                    }
-                }
-            }
+            arr[0] = last;
+            last++;
+            return arr;
         }
 
-        // for the last digit of the Array
-        if (currentLimit >= 2 && arr.length > 1) {
-            for (int k = 1; k <= currentLimit; k++) {
-                arr[arr.length - 2] = k;
-                for (int i = 1; i <= currentLimit; i++) {
-                    arr[arr.length - 1] = i;
-                    if (checkNumber(arr) == false) {
-                        if (checkInList(arr) == false) {
-                            list.add(toString(arr));
-                            res = arr;
-                            return res;
+        //Array with length>1(last two index)
+        else { //normal ; No limit reached
+            if (goDown == false) {
+                for (int i = secondLast; i < currentLimit; i++) {
+                    arr[arr.length - 2] = i;
+                    for (int j = last; j < currentLimit + 1; j++) {
+                        arr[arr.length - 1] = j;
+                        if (checkNumber(arr) == false) {
+                            last = j + 1;
+                            //if (isDouble(arr, currentArr) ==false) {
+                            currentArr = arr;
+                            return arr;
+                            //}
                         }
                     }
-                }
-            }
-        }
-
-        // Array with more than two elements
-        if (arr.length > 2 && currentLimit > firstIndex) {
-                while (arr[arr.length - firstIndex] >= currentLimit - 2 && arr.length > firstIndex) {
-                    firstIndex++;
-                    arr[arr.length - firstIndex] = arr[arr.length - firstIndex] + 1;
-                }
-                if (arr[arr.length - firstIndex] < currentLimit) {
-                    while (firstIndex > 2) {
-                        firstIndex--;
-                        arr[arr.length - firstIndex] = 1;
+                    secondLast = currentLimit;
+                    last = 1;
+                    if (currentLimit >= 3 && i == currentLimit - 1) {
+                        i = currentLimit + 1;
                     }
-                    return generate(firstIndex);
                 }
+
+            } else {
+                //limit reached --> secondLast part again ==1; while last part of array== currentLimit
+                if (secondLast < currentLimit - 1) {
+                    do {
+                        arr[arr.length - 2] = secondLast;
+                        arr[arr.length - 1] = currentLimit - 1;
+                        secondLast++;
+                    }
+                    while (checkNumber(arr) != false && arr[arr.length - 2] < currentLimit);
+                    if (currentLimit > 4) { // needed, because otherwise [2,3] is twice
+                        return arr;
+                    } else {
+                        if (arr[arr.length - 2] != 2) {
+                            return arr;
+                        }
+                        return generateNumbers();
+                    }
+
+                }// array second last part again at currentLimit/ every Combination with last Part== currentLimit
+                else {
+                    goDown = false;
+
+                    last = 1;
+                    return generateNumbers();
+
+                }
+            }
+
+
         }
-        currentLimit++;
+        //more than length 3;
+        if (size > 2) {
+            if (arr[arr.length - currentIndex] < currentLimit / 2) {
+                currentLimit = 2;
+                arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
+            } else {
+                if (currentIndex < arr.length) {
+                    currentIndex++;
+                    if (arr[arr.length - currentIndex] < currentLimit) {
+                        arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
+                    }
+                    currentIndex = 3;
+                    currentLimit = 2;
+                }
+            }
+        }
+
+        //currentLimit reached--> secondlast back to 1; all combos with new currentLimit at the last part of array
+        ++this.currentLimit;
+        if (currentLimit > 3) {
+            secondLast = 1;
+            last = this.currentLimit - 1;
+            goDown = true;
+        }else{
+
+        }
+
+
+        return generateNumbers();
+
+    }
+
+    private boolean isDouble(int[] arr, int[] currentArr) {
+        boolean isdouble = true;
         for (int i = 0; i < arr.length; i++) {
-            arr[i] = 1;
-
-        }
-        if (size > 3) {
-            firstIndex = 2;
-        } else if (size == 3) {
-            firstIndex = 4;
-        }
-
-        if (arr.length == 3 && currentLimit < 4 ) {
-            arr[0] = 1;
-            if (res[0] != 0) {
-                return generate(firstIndex);
+            if (arr[i] != currentArr[i]) {
+                return false;
             }
         }
-
-        if (arr.length >= firstIndex) {
-            if (res[0] != 0) {
-                return res;
-            }
-            return generate(firstIndex);
-        }
-
-        if (res[0] != 0) {
-            return res;
-        } else {
-            return generate(firstIndex);
-        }
-
+        return isdouble;
     }
 
-    private boolean checkInList(int[] arr) {
-
-        for (int k = 0; k < list.size(); k++) {
-            String arrInList = list.get(k);
-            if (toString(arr).equals(arrInList)) {
-                return true;
-            }
-        }
-        return false;
-    }
 
     private static String toString(int[] arr) {
         String s = "";
@@ -158,11 +168,5 @@ public class CombinationGenerator {
 
     }
 
-    public void printList() {
-        String printedList = "";
-        for (String arr : list) {
-            printedList += arr + "\n";
-        }
-        System.out.println(printedList);
-    }
+
 }
