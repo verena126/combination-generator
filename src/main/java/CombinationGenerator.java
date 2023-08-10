@@ -1,27 +1,29 @@
-import java.util.ArrayList;
-
 import java.util.Arrays;
-import java.util.List;
-
 
 public class CombinationGenerator {
     private final int size;
-
-
     private int[] arr;
     private int last;
     private int secondLast;
     private int currentLimit;
     private int currentIndex;
     private int temp = 1;
-    private boolean goDown = false;
-    private boolean setUp;
+    private boolean activateIterateThroughSecondLast = false;
+
+    private boolean activateIterateThroughLast = false;
+    private int currentMaxLimitForLast;
+    private int currentLimitForLast;
+    private int maxLimitForLast3;
+
+    private boolean iterateWithNew = false;
+
+    private int maxLimit = 1;
 
 
     public CombinationGenerator(int size) {
         this.size = size;
         if (size > 2) {
-            currentLimit = size;
+            currentLimit = size + 1;
         } else {
             currentLimit = 1;
         }
@@ -33,124 +35,211 @@ public class CombinationGenerator {
 
 
     public int[] generate() {
-        return generateNumbers();
+        if (arr.length == 1) {
+            return generateArrayWithLengthOne();
+        } else {
+            return generateNumbers();
+        }
+    }
+
+    // Array with length == 1
+    private int[] generateArrayWithLengthOne() {
+        arr[0] = ++last;
+        return arr;
     }
 
 
+    //Array with length>1(last two index) // mainly for array with two elements
     private int[] generateNumbers() {
-        // Array with length == 1
-        if (arr.length == 1) {
-            arr[0] = ++last;
-            return arr;
+        if (size > 2) {
+            temp = arr[2] / 2;
+
+            if (iterateWithNew == true) {
+                return iterateWithNewLimit();
+            }
+            if (activateIterateThroughLast == true) {
+                return iterateThroughTheLastElement(currentMaxLimitForLast, currentLimitForLast, maxLimitForLast3);
+            }
         }
 
-        //Array with length>1(last two index) // mainly for array with two elements
-        else { //normal ; No limit reached
-            if (goDown == false) {
-                for (int i = secondLast; i < currentLimit; i++) {
-                    arr[arr.length - 2] = i;
-                    for (int j = last; j < currentLimit + 1; j++) {
-                        arr[arr.length - 1] = j;
-                        if (checkNumber(arr) == false) {
-                            last = j + 1;
-                            return arr;
-
-                        }
-                    }
-                    if (currentLimit < 4) {
-                        secondLast = 3;
-                    } else {
-                        secondLast = currentLimit;
-                    }
-                    last = 1;
-                    if (currentLimit >= 3 && i == currentLimit - 1) {
-                        i = currentLimit + 1;
+        if (activateIterateThroughSecondLast == true) { // limit reached --> go back to one with secondLast and to currentLimit with last;
+            if (arr[arr.length - 1] == currentLimit) {
+                last = 1;
+                secondLast = 1;
+            }
+            return iterateThroughSecondLastPart();
+        }
+        //normal ; No limit reached
+        else {
+            for (int i = secondLast; i < currentLimit; i++) {
+                arr[arr.length - 2] = i;
+                for (int j = last; j < currentLimit + 1; j++) {
+                    arr[arr.length - 1] = j;
+                    if (checkNumber(arr) == false) {
+                        last = j + 1;
+                        secondLast = i;
+                        return arr;
                     }
                 }
-
-
-                //limit reached
-            } else {
-                //limit reached --> secondLast part again == 1; while last part of array== currentLimit
-                if (secondLast < currentLimit - 1) {
-                    do {
-                        arr[arr.length - 2] = secondLast;
-                        arr[arr.length - 1] = currentLimit - 1;
-                        secondLast++;
-                    } while (checkNumber(arr) != false && arr[arr.length - 2] < currentLimit);
-                    if (currentLimit > size + 2) { // needed, because otherwise [2,3] is twice
-                        return arr;
-                    } else {
-                        if ((size > 2 && arr[arr.length - 2] != 2 && arr[arr.length - 2] != 3) || (currentLimit > 3 && arr[arr.length - 2] != 2)) {
-
-                            if (checkNumber(arr) != true) {
-                                return arr;
-                            }
-                        }
-                        return generateNumbers();
-                    }
-                }// array second last part again at currentLimit/ every Combination with last Part== currentLimit
-
-                else {
-                    goDown = false;
-                    last = 1;
-                    return generateNumbers();
-
+                secondLast = currentLimit - 1;
+                last = 1;
+                if (currentLimit >= 3 && i == currentLimit - 1) {
+                    i = secondLast;
                 }
             }
         }
 
-
+        if (currentLimit > 5) {
+            activateIterateThroughLast = true;
+            currentLimitForLast = 1;
+            currentMaxLimitForLast = currentLimit - 1;
+            maxLimitForLast3 = currentLimit - 1;
+        }
         //more than length three;
         if (size > 2) {
-            //if current Index < limit/2 , increase limit and currentIndex
-            if (arr[arr.length - currentIndex] < currentLimit /2) {
+            if (arr[arr.length - 3] >= 3) {
+                iterateIndex();
 
+            }
 
+            //arr[0] hochsetzen bis temp-1 reached entspricht max;
+
+            if (arr[arr.length - currentIndex] >= temp / 2) {
                 currentIndex = 3;
-                temp = currentLimit;
-                arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
-                goDown = true;
+                currentLimit = currentLimit + 1;
+
+                if (arr[arr.length - 1] >= maxLimit) {
+                    arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
+                }
                 secondLast = 1;
                 last = 1;
                 return generateNumbers();
-
-
             } else {
-                //currentIndex> limit/2 , increase currentIndex/
-                currentIndex = size - 1;
-                goDown = true;
-
-
+                currentLimit++;
                 //array with length 4 or more
-                if (arr.length > currentIndex) {
-
-                    while (currentIndex < arr.length && arr[arr.length - currentIndex] > currentLimit / 3) {
-                        currentIndex++;
-                    }
-                    arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
-                    // set Array on back to 1 with new currentIndex;
-                    for (int i = currentIndex-1; i > 0; i--) {
-                        arr[arr.length - i] = 1;
-                    }
-                    last = 1;
-                    secondLast = 1;
-                    setUp = true;
+                // for iterating through last index
+                if (currentLimit < 5) {
+                    currentLimit = maxLimit;
+                }
+                if (size == 3) {
+                    currentIndex = size;
+                } else {
+                    currentIndex = size - 1;
                 }
             }
         }
 
-
         //currentLimit reached--> secondlast back to 1; all combos with new currentLimit at the last part of array
         ++this.currentLimit;
-        if (currentLimit >= 3) {
-            secondLast = 1;
-            last = this.currentLimit - 1;
-            goDown = true;
-            //arr[arr.length - currentIndex] = 1;
+
+
+        if (currentLimit < 10) {
+            activateIterateThroughSecondLast = true;
+        }
+
+        if (maxLimit < currentLimit) {
+            maxLimit = currentLimit;
+
+        }
+        if (currentLimit == maxLimit) {
+            if (currentLimit > 3) {
+                secondLast = 1;
+                last = currentLimit - 1;
+            }
         }
         return generateNumbers();
 
+    }
+
+    private int[] iterateThroughTheLastElement(int lastIndex, int firstIndex, int maxLimit) { // change length-3 & the last Element while lenght-2 == limit
+
+        if (currentLimit > 4) {
+
+            for (int k = firstIndex; k < this.currentLimit - 3; k++) {  // von 1 bis limit-2
+                for (int j = maxLimit - 1; j > maxLimit - 2; j--) { // bleibt auf limit
+                    for (int m = lastIndex; m > 0; m--) {                     // von limit bis 1 runterzählen
+                        arr[arr.length - 3] = k;
+                        arr[arr.length - 2] = j;
+                        arr[arr.length - 1] = m;
+                        --currentMaxLimitForLast; // testMethod1 == maxLimit/wird immer 1 heruntergesetzt
+
+                        if (checkNumber(arr) == false) {
+                            return arr;
+                        }
+                    }
+                    lastIndex = this.currentLimit - 1;
+                    currentMaxLimitForLast = this.currentLimit - 1;
+                    maxLimitForLast3--;
+                    //return iterateThroughSecondLastPart();
+                }
+                currentLimitForLast++;
+                maxLimitForLast3++;
+                maxLimit = maxLimitForLast3;
+            }
+            arr[arr.length - 3] = currentLimit - 2;
+            arr[arr.length - 2] = 1;
+            arr[arr.length - 1] = 1;
+        }
+        secondLast = 1;
+        last = 1;
+        arr[arr.length - 3] = 1;
+        iterateWithNew = true;
+        // activateIterateThroughSecondLast = true;
+        activateIterateThroughLast = false;
+
+        return generateNumbers();
+    }
+
+    private int[] iterateWithNewLimit() { // iterate at( length-3) while length-2=1 and length-1= limit
+        arr[arr.length - 2] = 1;
+        arr[arr.length - 1] = currentLimit;
+        if (arr[arr.length - 3] < currentLimit) {
+            arr[arr.length - 3] = arr[arr.length - 3] + 1;
+            if (checkNumber(arr) == false) {
+                return arr;
+            }
+        } else {
+            arr[arr.length - 3] = currentLimit - 2;
+            arr[arr.length - 2] = 1;
+            arr[arr.length - 1] = 1;
+            iterateWithNew = false;
+
+        }
+        return generateNumbers();
+    }
+
+    private int[] iterateThroughSecondLastPart() {
+        //limit reached --> secondLast part again == 1(iterate here); while last part of array== currentLimit
+        if (secondLast < currentLimit - 3) {
+            do {
+                arr[arr.length - 2] = secondLast;
+                arr[arr.length - 1] = currentLimit - 1;
+                secondLast++;
+            } while (checkNumber(arr) != false && arr[arr.length - 2] < currentLimit);
+
+            if (currentLimit > size + 2) { // needed, because otherwise [2,3] is twice
+                return arr;
+            } else {
+                if ((size > 2 && arr[arr.length - 2] != 2 && arr[arr.length - 2] != 3) || (currentLimit > 3 && arr[arr.length - 2] != 2)) {
+
+                    if (checkNumber(arr) != true) {
+                        if (arr[arr.length - 1] == currentLimit - 1) {
+
+                        }
+                        return arr;
+                    }
+                }
+                return generateNumbers();
+            }
+        }// array second last part again at currentLimit/ every Combination with last Part== currentLimit
+
+        else {
+            // secondLast = currentLimit;
+            activateIterateThroughSecondLast = false;
+            last = 1;
+            return generateNumbers();
+
+        }
     }
 
 
@@ -183,5 +272,22 @@ public class CombinationGenerator {
 
     }
 
+    private void iterateIndex() { // currentIndex++;
+        if (arr.length > currentIndex && arr.length > 3) {
 
+
+            while (currentIndex < arr.length && arr[arr.length - currentIndex] > currentLimit / 3) {
+                currentIndex++;
+            }
+
+            arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
+            // set Array on back to 1 with new currentIndex;
+            for (int i = currentIndex - 1; i > 0; i--) {
+                arr[arr.length - i] = 1;
+            }
+            last = 1;
+            secondLast = 1;
+
+        }
+    }
 }
