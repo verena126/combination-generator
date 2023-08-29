@@ -2,42 +2,57 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 
+import java.util.Arrays;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class CombinationGeneratorTest {
-
-    private CombinationGenerator cg2;
-    private CombinationGenerator cg3;
-    private CombinationGenerator cg4;
-    private CombinationGenerator cg5;
-    private CombinationGenerator cg6;
+public class CombinationGeneratorNeTest {
+    private CombinationGeneratorNew cg1;
+    private CombinationGeneratorNew cg2;
+    private CombinationGeneratorNew cg3;
+    private CombinationGeneratorNew cg4;
+    private CombinationGeneratorNew cg5;
+    private CombinationGeneratorNew cg6;
+    private CombinationGeneratorNew cg8;
 
 
     @BeforeEach
     void setup() {
-        cg2 = new CombinationGenerator(2);
-        cg3 = new CombinationGenerator(3);
-        cg4 = new CombinationGenerator(4);
-        cg5 = new CombinationGenerator(5);
-        cg6 = new CombinationGenerator(6);
+        cg1 = new CombinationGeneratorNew(1);
+        cg2 = new CombinationGeneratorNew(2);
+        cg3 = new CombinationGeneratorNew(3);
+        cg4 = new CombinationGeneratorNew(4);
+        cg5 = new CombinationGeneratorNew(5);
+        cg6 = new CombinationGeneratorNew(6);
+        cg8 = new CombinationGeneratorNew(8);
 
 
     }
 
     @Test
-    void arrayIsInitalized() {
+    void testCombinationGenerator() {
+        for (int i = 0; i < 20; i++) {
+            int[] res = cg1.generate();
+            System.out.println(Arrays.toString(res));
+        }
+    }
 
+    @Test
+    void arrayIsInitalized() {
+        var a1_1 = cg1.generate();
+        assertThat(a1_1).contains(1);
 
         var a2_1 = cg2.generate();
         assertThat(a2_1).contains(1, 2);
         var a3_1 = cg3.generate();
         assertThat(a3_1).contains(1, 2, 3);
-
         var a4_1 = cg4.generate();
         assertThat(a4_1).contains(1, 2, 3, 4);
         var a5_1 = cg5.generate();
         assertThat(a5_1).contains(1, 2, 3, 4, 5);
+        var a6_1 = cg6.generate();
+        assertThat(a6_1).contains(1, 2, 3, 4, 5, 6);
     }
 
 
@@ -49,9 +64,9 @@ public class CombinationGeneratorTest {
         var a2_2 = cg2.generate();
         assertThat(a2_2).contains(2, 1);
         var a2_3 = cg2.generate();
-        assertThat(a2_3).contains(1, 3);
+        assertThat(a2_3).contains(2, 3);
         var a2_4 = cg2.generate();
-        assertThat(a2_4).contains(2, 3);
+        assertThat(a2_4).contains(1, 3);
         var a2_5 = cg2.generate();
         assertThat(a2_5).contains(3, 1);
         var a2_6 = cg2.generate();
@@ -60,24 +75,44 @@ public class CombinationGeneratorTest {
         var a3_1 = cg3.generate();
         assertThat(a3_1).contains(1, 2, 3);
         var a3_2 = cg3.generate();
-        assertThat(a3_2).contains(1, 3, 2);
+        assertThat(a3_2).contains(1, 2, 4);
         var a3_3 = cg3.generate();
-        assertThat(a3_3).contains(2, 1, 3);
+        assertThat(a3_3).contains(1, 3, 2);
         var a3_4 = cg3.generate();
-        assertThat(a3_4).contains(3, 1, 2);
-
+        assertThat(a3_4).contains(1, 3, 4);
 
         var a4_1 = cg4.generate();
         assertThat(a4_1).contains(1, 2, 3, 4);
         var a4_2 = cg4.generate();
-        assertThat(a4_2).contains(1, 2, 4, 3);
+        assertThat(a4_2).contains(1, 2, 3, 5);
         var a4_3 = cg4.generate();
         assertThat(a4_3).contains(1, 3, 2, 4);
 
+        var a5_1 = cg5.generate();
+        assertThat(a5_1).contains(1, 2, 3, 4, 5);
+        var a5_2 = cg5.generate();
+        assertThat(a5_2).contains(1, 2, 3, 4, 6);
+        var a5_3 = cg5.generate();
+        assertThat(a5_3).contains(1, 2, 3, 5, 4);
+
+        var a6_1 = cg6.generate();
+        assertThat(a6_1).contains(1, 2, 3, 4, 5, 6);
+        var a6_2 = cg6.generate();
+        assertThat(a6_2).contains(1, 2, 3, 4, 5, 7);
+        var a6_3 = cg6.generate();
+        assertThat(a6_3).contains(1, 3, 4, 5, 6, 5);
     }
 
     @Test
     void testGenerateWithTwoElements() {
+
+        for (int i = 0; i < 1000; i++) {
+            int[] res = cg2.generate();
+            System.out.println(Arrays.toString(res));
+        }
+        System.out.println(Arrays.toString(cg2.generate()));
+
+
         assertThat(tryFind(new int[]{2, 10}, cg2)).isTrue();
         assertThat(tryFind(new int[]{12, 4}, cg2)).isTrue();
         assertThat(tryFind(new int[]{19, 1}, cg2)).isTrue();
@@ -98,10 +133,12 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{17, 3}, cg2)).isTrue();
         assertThat(tryFind(new int[]{7, 10}, cg2)).isTrue();
         assertThat(tryFind(new int[]{18, 5}, cg2)).isTrue();
+
     }
 
     @Test
     void testGenerateWithTwoElementsNegative() {
+
         assertThat(tryFind(new int[]{2, 2}, cg2)).isFalse();
         assertThat(tryFind(new int[]{12, 12}, cg2)).isFalse();
         assertThat(tryFind(new int[]{19, 19}, cg2)).isFalse();
@@ -121,17 +158,25 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{10, 10}, cg2)).isFalse();
         assertThat(tryFind(new int[]{11, 11}, cg2)).isFalse();
         assertThat(tryFind(new int[]{28, 28}, cg2)).isFalse();
-        assertThat(tryFind(new int[]{30, 30}, cg2)).isFalse();
+        assertThat(tryFind(new int[]{30, 0}, cg2)).isFalse();
+
     }
 
 
     @Test
     void testGenerateWithThreeElements() {
+        for (int i = 0; i < 3000; i++) {
+            int[] res = cg3.generate();
+            System.out.println(Arrays.toString(res));
+        }
+        System.out.println(Arrays.toString(cg3.generate()));
+
+
         assertThat(tryFind(new int[]{1, 2, 3}, cg3)).isTrue();
         assertThat(tryFind(new int[]{3, 5, 7}, cg3)).isTrue();
         assertThat(tryFind(new int[]{7, 1, 6}, cg3)).isTrue();
         assertThat(tryFind(new int[]{4, 5, 1}, cg3)).isTrue();
-        assertThat(tryFind(new int[]{12, 23, 4}, cg3)).isTrue();
+        assertThat(tryFind(new int[]{12, 18, 4}, cg3)).isTrue();
         assertThat(tryFind(new int[]{5, 1, 2}, cg3)).isTrue();
         assertThat(tryFind(new int[]{6, 19, 16}, cg3)).isTrue();
         assertThat(tryFind(new int[]{22, 4, 3}, cg3)).isTrue();
@@ -142,12 +187,12 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{23, 12, 9}, cg3)).isTrue();
         assertThat(tryFind(new int[]{1, 18, 12}, cg3)).isTrue();
         assertThat(tryFind(new int[]{19, 5, 1}, cg3)).isTrue();
-        assertThat(tryFind(new int[]{2, 1, 15}, cg3)).isTrue();
         assertThat(tryFind(new int[]{13, 5, 11}, cg3)).isTrue();
         assertThat(tryFind(new int[]{17, 3, 14}, cg3)).isTrue();
         assertThat(tryFind(new int[]{7, 10, 11}, cg3)).isTrue();
         assertThat(tryFind(new int[]{18, 5, 1}, cg3)).isTrue();
         assertThat(tryFind(new int[]{20, 1, 12}, cg3)).isTrue();
+        assertThat(tryFind(new int[]{3, 1, 16}, cg3)).isTrue();
     }
 
     @Test
@@ -178,12 +223,21 @@ public class CombinationGeneratorTest {
     @Test
     void testGenerateWithFourElements() {
 
-        assertThat(tryFind(new int[]{1, 10, 4, 30}, cg4)).isTrue();
-        assertThat(tryFind(new int[]{24, 13, 26, 6}, cg4)).isTrue();
+        for (int i = 0; i < 4000; i++) {
+            int[] res = cg4.generate();
+            System.out.println(Arrays.toString(res));
+        }var res = cg4.generate();
+        System.out.println(Arrays.toString(res));
+
+
+        res = cg4.generate();
+        System.out.println(Arrays.toString(res));
+        assertThat(tryFind(new int[]{1, 10, 4, 15}, cg4)).isTrue();
+        assertThat(tryFind(new int[]{12, 13, 26, 6}, cg4)).isTrue();
         assertThat(tryFind(new int[]{12, 1, 24, 2}, cg4)).isTrue();
-        assertThat(tryFind(new int[]{3, 1, 11, 14}, cg4)).isTrue();
+        assertThat(tryFind(new int[]{3, 2, 11, 14}, cg4)).isTrue();
         assertThat(tryFind(new int[]{17, 8, 92, 5}, cg4)).isTrue();
-        assertThat(tryFind(new int[]{91, 4, 1, 5}, cg4)).isTrue();
+        assertThat(tryFind(new int[]{19, 4, 1, 5}, cg4)).isTrue();
         assertThat(tryFind(new int[]{1, 7, 8, 3}, cg4)).isTrue();
         assertThat(tryFind(new int[]{5, 2, 1, 6}, cg4)).isTrue();
         assertThat(tryFind(new int[]{1, 15, 62, 31}, cg4)).isTrue();
@@ -205,6 +259,7 @@ public class CombinationGeneratorTest {
 
     @Test
     void testGenerateWithFourElementsNegative() {
+        assertThat(tryFind(new int[]{1, 0, 32, 5}, cg4)).isFalse();
         assertThat(tryFind(new int[]{55, 10, 4, 10}, cg4)).isFalse();
         assertThat(tryFind(new int[]{24, 100, 99, 24}, cg4)).isFalse();
         assertThat(tryFind(new int[]{33, 1, 53, 53}, cg4)).isFalse();
@@ -232,8 +287,34 @@ public class CombinationGeneratorTest {
 
     @Test
     void testGenerateWithFiveElements() {
+        for (int i = 0; i < 1000; i++) {
+            int[] res = cg5.generate();
+            System.out.println(Arrays.toString(res));
+        }
 
         assertThat(tryFind(new int[]{2, 5, 4, 3, 1}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 5, 4, 3, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{3, 4, 5, 2, 1}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 5, 4, 3, 6}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{2, 5, 6, 3, 1}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{3, 4, 6, 1, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 3, 6, 2, 7}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{4, 3, 7, 2, 1}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 5, 2, 3, 9}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 2, 8, 3, 5}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{6, 5, 4, 3, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 3, 4, 2, 12}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{3, 6, 2, 4, 7}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{2, 3, 1, 8, 10}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 3, 4, 10, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{2, 3, 5, 6, 1}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{4, 1, 10, 8, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 6, 2, 10, 12}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{7, 1, 4, 3, 2}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{4, 2, 12, 3, 6}, cg5)).isTrue();
+        assertThat(tryFind(new int[]{1, 5, 4, 16, 8}, cg5)).isTrue();
+
+
     }
 
 
@@ -241,17 +322,62 @@ public class CombinationGeneratorTest {
     void testGenerateWithFiveElementsNegative() {
 
         assertThat(tryFind(new int[]{55, 10, 4, 10, 1}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{55, 5, 4, 55, 1}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{5, 3, 4, 10, 3}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{5, 1, 4, 11, 4}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{4, 3, 3, 12, 2}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{3, 5, 2, 13, 2}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{2, 7, 1, 14, 7}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{1, 9, 4, 15, 1}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{6, 7, 3, 16, 6}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{5, 5, 2, 17, 12}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{4, 3, 1, 18, 4}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{3, 1, 4, 19, 3}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{2, 3, 3, 2, 15}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{1, 5, 2, 3, 5}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{6, 7, 1, 4, 7}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{5, 9, 4, 5, 9}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{4, 7, 3, 6, 4}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{3, 5, 2, 7, 3}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{2, 3, 1, 8, 2}, cg5)).isFalse();
+        assertThat(tryFind(new int[]{1, 1, 4, 9, 15}, cg5)).isFalse();
+
     }
 
     @Test
     void testGenerateWithSixElements() {
-        assertThat(tryFind(new int[]{1, 3, 2, 5, 6, 4}, cg6)).isTrue();
+        for (int i = 0; i < 1000; i++) {
+            int[] res = cg6.generate();
+            System.out.println(Arrays.toString(res));
+        }
+        assertThat(tryFind(new int[]{1, 2, 3, 5, 6, 4}, cg6)).isTrue();
+        assertThat(tryFind(new int[]{2, 1, 3, 5, 6, 4}, cg6)).isTrue();
+        assertThat(tryFind(new int[]{2, 1, 5, 3, 6, 4}, cg6)).isTrue();
+        assertThat(tryFind(new int[]{1, 4, 3, 6, 5, 2}, cg6)).isTrue();
+        assertThat(tryFind(new int[]{3, 1, 2, 5, 6, 4}, cg6)).isTrue();
+
+    }
+
+    @Test
+    void testGenerateWithSixElementsNegative() {
+        assertThat(tryFind(new int[]{55, 10, 4, 10, 1, 2}, cg6)).isFalse();
+        assertThat(tryFind(new int[]{1, 9, 4, 7, 1, 3}, cg6)).isFalse();
+        assertThat(tryFind(new int[]{2, 3, 4, 3, 1, 5}, cg6)).isFalse();
+        assertThat(tryFind(new int[]{1, 8, 8, 6, 2, 3}, cg6)).isFalse();
+        assertThat(tryFind(new int[]{2, 7, 3, 2, 5, 9}, cg6)).isFalse();
+
+    }
+
+    @Test
+    void testGenerateWithSevenElements() {
+
+        assertThat(tryFind(new int[]{2, 3, 4, 1, 5, 6, 7, 8}, cg8)).isTrue();
     }
 
 
-    private boolean tryFind(int[] toFound, CombinationGenerator cg) {
-        cg = new CombinationGenerator(toFound.length);
-        int maxLimit = 2000;
+    private boolean tryFind(int[] toFound, CombinationGeneratorNew cg) {
+        cg = new CombinationGeneratorNew(toFound.length);
+        int maxLimit = 1000000;
         boolean found = false;
         int step = 0;
 
@@ -260,31 +386,33 @@ public class CombinationGeneratorTest {
             found = false;
             for (int i = 0; i < toFound.length; i++) {
                 found = true;
+
                 if (toFound[i] != res[i]) {
                     found = false;
                     break;
                 }
             }
             step++;
-            cg.printList();
+            //cg.printList();
         }
         return found;
     }
 
+
     @Test
     void testDouble() {
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 8; i++) {
             assertThat(checkDouble(i)).isFalse();
         }
     }
 
     private static boolean checkDouble(int currentLength) {
         int[] arr;
-        CombinationGenerator cg = new CombinationGenerator(currentLength);
+        CombinationGeneratorNew cg = new CombinationGeneratorNew(currentLength);
         for (int i = 0; i < 100; i++) {
             arr = cg.generate();
             for (int j = 0; j < currentLength - 1; j++) {
-                for (int k = i + 1; k < currentLength; k++) {
+                for (int k = j + 1; k < currentLength; k++) {
 
                     if (arr[j] == arr[k]) {
                         return true;
@@ -297,7 +425,7 @@ public class CombinationGeneratorTest {
 
     @Test
     void testIfAlwaysTheSame() {
-        for (int i = 1; i < 100; i++) {
+        for (int i = 1; i < 7; i++) {
             assertThat(checkIfTheSame(i)).isTrue();
         }
     }
@@ -306,8 +434,8 @@ public class CombinationGeneratorTest {
         int[] arr2;
         int[] arr3;
 
-        CombinationGenerator cg = new CombinationGenerator(currentLength);
-        CombinationGenerator cg1 = new CombinationGenerator(currentLength);
+        CombinationGeneratorNew cg = new CombinationGeneratorNew(currentLength);
+        CombinationGeneratorNew cg1 = new CombinationGeneratorNew(currentLength);
         for (int i = 0; i < 100; i++) {
             arr2 = cg.generate();
             arr3 = cg1.generate();

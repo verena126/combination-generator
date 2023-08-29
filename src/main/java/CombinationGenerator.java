@@ -45,7 +45,7 @@ public class CombinationGenerator {
 
     // Array with length == 1
     private int[] generateArrayWithLengthOne() {
-        arr[0] = ++last;
+        arr[0] = last++;
         return arr;
     }
 
@@ -99,30 +99,43 @@ public class CombinationGenerator {
         //more than length three;
         if (size > 2) {
             if (size > 3) {
-                if (arr[arr.length - 3] >= currentLimitAtFirstIndex) {
-                    iterateIndexAtFirstPlace();
+                //System.out.println(arr[0] + " " + currentLimit / 2 + " " + currentLimitAtFirstIndex);
+
+                if (arr[0] < currentLimit - 3 && arr[0] < currentLimitAtFirstIndex) {
+                    inkrementIndexAtFirstPlace();                                             // iterate while < curentLimitAtFirstIndex
+
+                } else if (arr[0] < currentLimit - 3 && arr[0] >= currentLimitAtFirstIndex) {
+                    currentLimit = size - 1;                                                     // iterate once with limit =size; new limit reached
+                    inkrementIndexAtFirstPlace();
+                    goDownWithNewIndex();
+                    activateIterateThroughSecondLast = true;
+
+
+                } else if (arr[0] >= currentLimit) {                                         //iterate throgh new Index; get all combinations;
+                    goDownWithNewIndex();
+                    currentLimit++;
+                    iterateThroughSecondLastPart();
+
                 } else {
-                    arr[arr.length - 3] = 1;
+                    arr[0] = 1;
+
                 }
             }
+
+
             //arr[0] hochsetzen bis temp-1 reached entspricht max;
             if (arr[arr.length - currentIndex] >= temp / 2) {
                 currentIndex = 3;
                 currentLimit = currentLimit + 1;
 
-                if (arr[arr.length - 1] >= 1) {
-                    arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
-                }
+                arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
+
                 secondLast = 1;
                 last = 1;
+                //currentIndex++;
                 return generateNumbers();
             } else {
                 currentLimit++;
-                //array with length 4 or more
-                // for iterating through last index
-                /*if (currentLimit < 5) {
-                    currentLimit = maxLimit;
-                }*/
                 if (size == 3) {
                     currentIndex = size;
                 } else {
@@ -148,11 +161,40 @@ public class CombinationGenerator {
         return generateNumbers();
     }
 
+    private int[] iterateWhileLastEqualsLimit(int i) { // iterate at( length-3) while length-2=1 and length-1= limit
+
+        arr[arr.length - 2] = i;
+        arr[arr.length - 1] = currentLimit - 1;
+
+        if (arr[arr.length - 3] < currentLimit - 1 && i < currentLimit) {
+            arr[arr.length - 3] = arr[arr.length - 3] + 1;
+            if (!checkNumber(arr)) {
+                return arr;
+            }
+        } else if (i < currentLimit) {
+            arr[arr.length - 3] = 1;
+            arr[arr.length - 1] = 1;
+            ++l1;
+            arr[arr.length - 2] = l1;
+
+
+        } else {
+            iterateWithNew = false;
+            arr[arr.length - 3] = currentLimit - 2;
+            arr[arr.length - 1] = 1;
+            arr[arr.length - 2] = 1;
+            secondLast = 1;
+            last = 1;
+        }
+        return generateNumbers();
+    }
+
+
     private int[] iterateThroughTheLastElement(int lastIndex, int firstIndex, int maxLimit) { // change length-3 & the last Element while lenght-2 == limit
 
         if (currentLimit > 4) {
 
-            for (int k = firstIndex; k < this.currentLimit - 3; k++) {  // von 1 bis limit-2
+            for (int k = firstIndex; k < this.currentLimit - 3; k++) {  // von 1 bis limit-3
                 for (int j = maxLimit - 1; j > maxLimit - 2; j--) { // bleibt auf limit
                     for (int m = lastIndex; m > 0; m--) {                     // von limit bis 1 runterzählen
                         arr[arr.length - 3] = k;
@@ -187,33 +229,6 @@ public class CombinationGenerator {
         return generateNumbers();
     }
 
-    private int[] iterateWhileLastEqualsLimit(int i) { // iterate at( length-3) while length-2=1 and length-1= limit
-
-        arr[arr.length - 2] = i;
-        arr[arr.length - 1] = currentLimit - 1;
-
-        if (arr[arr.length - 3] < currentLimit && i < currentLimit) {
-            arr[arr.length - 3] = arr[arr.length - 3] + 1;
-            if (!checkNumber(arr)) {
-                return arr;
-            }
-        } else if (i < currentLimit) {
-            arr[arr.length - 3] = 1;
-            arr[arr.length - 1] = 1;
-            ++l1;
-            arr[arr.length - 2] = l1;
-
-
-        } else {
-            iterateWithNew = false;
-            arr[arr.length - 3] = currentLimit - 2;
-            arr[arr.length - 1] = 1;
-            arr[arr.length - 2] = 1;
-            secondLast = 1;
-            last = 1;
-        }
-        return generateNumbers();
-    }
 
     private int[] iterateThroughSecondLastPart() {
         //limit reached --> secondLast part again == 1(iterate here); while last part of array== currentLimit [?,limit]
@@ -247,14 +262,6 @@ public class CombinationGenerator {
     }
 
 
-    private static String toString(int[] arr) {
-        String s = "";
-        for (int i = 0; i < arr.length; i++) {
-            s += arr[i] + " ";
-        }
-        return s;
-    }
-
     private static boolean checkNumber(int[] arr) {
         for (int i = 0; i < arr.length - 1; i++) {
             for (int k = i + 1; k < arr.length; k++) {
@@ -276,23 +283,19 @@ public class CombinationGenerator {
 
     }
 
-    private void iterateIndexAtFirstPlace() { // currentIndex++; // for Array length>3
+    private void inkrementIndexAtFirstPlace() { // currentIndex++; // for Array length>3
         if (arr.length > currentIndex && arr.length > 3) {
-            if (currentIndex < arr.length && arr[arr.length - currentIndex] > currentLimit / 3) {
+            while (currentIndex < arr.length && arr[arr.length - currentIndex] > currentLimit / 3) {
                 currentIndex++;
             }
 
             arr[arr.length - currentIndex] = arr[arr.length - currentIndex] + 1;
             // set Array on back to 1 with new currentIndex;
-            for (int i = 1; i < arr.length; i++) {
-                arr[arr.length - i] = i;
-
-            }
-            currentLimit = 2;
 
 
-            if (arr[arr.length - 4] > currentLimitAtFirstIndex) {
+            if (arr[arr.length - currentIndex] > currentLimitAtFirstIndex) {
                 currentLimitAtFirstIndex = arr[arr.length - 4];
+                currentLimit = 2;
 
             }
             currentIndex = 3;
@@ -305,7 +308,8 @@ public class CombinationGenerator {
 
 
     private void goDownWithNewIndex() { // firstIndex== 1, while rest iteratesWith limit -2
-        arr[arr.length - currentIndex] = 1;
-
+        for (int i = 1; i < size; i++) {
+            arr[i] = 1;
+        }
     }
 }
