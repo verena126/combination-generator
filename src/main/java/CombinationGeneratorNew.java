@@ -13,14 +13,14 @@ public class CombinationGeneratorNew {
     private int counter = 0;
     private int maxPermutation = 1;
     private int currentPermuationLimit;
-    private ArrayList<ArrayList<Integer>> res;
+    ArrayList<ArrayList<Integer>> results = new ArrayList<>();
 
     private boolean activateIterateThroughSecondLast = false;
 
 
     public CombinationGeneratorNew(int size) {
         this.size = size;
-         if (size > 2) {
+        if (size > 2) {
             currentLimit = size + 1;
             currentPermuationLimit = size;
         } else {
@@ -122,69 +122,62 @@ public class CombinationGeneratorNew {
     }
 
     private int[] ArrayWithLengthMoreThanTwo() {
+        ArrayList<Integer> nums = new ArrayList<>();
+        for (int i = 0; i < arr.length; i++) {
+            nums.add(arr[i]);
+        }
+//        System.err.println(Arrays.toString(arr));
 
-        if (counter == 0) {
+        if (results.size() == 0) {
+            boolean isTwice = false;
+            for (int i = arr.length - 2; i >= 0; i--) {
+                arr[i]++;
+                if (checkIfNumberIsTwice(arr) == false) {
+                    isTwice = true;
+                    if (i == 0) {
+                        for (int j = 1; j < arr.length - 1; j++) {
+                            arr[j] = arr[i] + j;
+                        }
+                    } else if (i > 0 && i < arr.length - 2) {
+                        for (int j = i+1; j < arr.length - 1; j++) {
+                            arr[j] = arr[j-1] + 1;
+                        }
+                    }
+                    break;
+                } else {
 
-            counter = 1;
-            ArrayList<Integer> nums = new ArrayList<>();
-            for (int i = 0; i < arr.length; i++) {
-                nums.add(arr[i]);
-            }
-
-            res = permute(nums);
-            if (res != null) {
-                for (int i = 0; i < size; i++) {
-                    arr[i] = res.get(0).get(i);
+                    arr[i]--;
                 }
             }
-            if (checkIfNumberIsTwice(arr) != true) {
-                return arr;
-            } else {
-                arr[0]++;
-            }
-            //Set<ArrayList<Integer>> hs = new HashSet<ArrayList<Integer>>();
-        }
-        if (counter < maxPermutation) {
+            if (isTwice == false) {
 
-            for (int i = 0; i < size; i++) {
-                arr[i] = res.get(counter).get(i);
-            }
-            counter++;
-            if (checkIfNumberIsTwice(arr) != true) {
-                return arr;
-            } else {
-                arr[0]++;
-            }
-        } else if (counter >= maxPermutation) {
-            // System.out.println(true);
-            arr[0]++;
-            if (arr[0] >= currentPermuationLimit && arr[arr.length - 1] < arr[0] - 2 && arr[1 ]!= 1) {
                 arr[arr.length - 1]++;
-                arr[arr.length - 2]=1;
-                arr[0]--;
-            }
-
-            if (currentPermuationLimit < arr[0]) {
-                currentPermuationLimit = arr[0];
-
-                for (int j = 1; j < arr.length; j++) {
-                    arr[j] = j;
+                for (int j = 0; j < arr.length - 1; j++) {
+                    arr[j] = j + 1;
                 }
+
             }
+        }
+
+
+        if (results.size() == 0) {
+            results = permute(nums);
+        } else if (results.size() > 0) {
+            int[] array1 = new int[size];
+            for (int i = 0; i < size; i++) {
+                array1[i] = results.get(0).get(i);
+            }
+            results.remove(0);
+            return array1;
 
         }
 
-        counter = 0;
         return ArrayWithLengthMoreThanTwo();
     }
 
     private ArrayList<ArrayList<Integer>> permute(ArrayList<Integer> nums) {
-        // Declaring result variable
         ArrayList<ArrayList<Integer>> res = new ArrayList<ArrayList<Integer>>();
         int x = nums.size() - 1;
-        // Calling permutations for the first
-        // time by passing l
-        // as 0 and h = nums.size()-1
         permutations(res, nums, 0, x);
         return res;
     }
@@ -192,7 +185,6 @@ public class CombinationGeneratorNew {
     private void permutations(ArrayList<ArrayList<Integer>> res, ArrayList<Integer> nums, int l, int h) {
         if (l == h) {
             ArrayList<Integer> nums1 = new ArrayList<Integer>(nums);
-
             res.add(nums1);
             return;
         }

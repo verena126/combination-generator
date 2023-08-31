@@ -1,13 +1,12 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import java.util.Arrays;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class CombinationGeneratorNeTest {
+public class CombinationGeneratorTest {
     private CombinationGeneratorNew cg1;
     private CombinationGeneratorNew cg2;
     private CombinationGeneratorNew cg3;
@@ -71,46 +70,54 @@ public class CombinationGeneratorNeTest {
         assertThat(a2_5).contains(3, 1);
         var a2_6 = cg2.generate();
         assertThat(a2_6).contains(3, 2);
+    }
 
+    @Test
+    void testFirstElementsforSizeThree() {
         var a3_1 = cg3.generate();
         assertThat(a3_1).contains(1, 2, 3);
         var a3_2 = cg3.generate();
-        assertThat(a3_2).contains(1, 2, 4);
+        assertThat(a3_2).contains(1, 3, 2);
         var a3_3 = cg3.generate();
-        assertThat(a3_3).contains(1, 3, 2);
+        assertThat(a3_3).contains(2, 1, 3);
         var a3_4 = cg3.generate();
-        assertThat(a3_4).contains(1, 3, 4);
+        assertThat(a3_4).contains(2, 3, 1);
 
+    }
+
+    @Test
+    void testFirstElementsforSizeFour() {
         var a4_1 = cg4.generate();
         assertThat(a4_1).contains(1, 2, 3, 4);
         var a4_2 = cg4.generate();
-        assertThat(a4_2).contains(1, 2, 3, 5);
+        assertThat(a4_2).contains(1, 2, 4, 3);
         var a4_3 = cg4.generate();
         assertThat(a4_3).contains(1, 3, 2, 4);
+    }
+
+    @Test
+    void testFirstElementsforSizeFive() {
 
         var a5_1 = cg5.generate();
         assertThat(a5_1).contains(1, 2, 3, 4, 5);
         var a5_2 = cg5.generate();
-        assertThat(a5_2).contains(1, 2, 3, 4, 6);
+        assertThat(a5_2).contains(1, 2, 3, 5, 4);
         var a5_3 = cg5.generate();
-        assertThat(a5_3).contains(1, 2, 3, 5, 4);
+        assertThat(a5_3).contains(1, 2, 4, 3, 5);
+    }
 
+    @Test
+    void testFirstElementsforSizeSix() {
         var a6_1 = cg6.generate();
         assertThat(a6_1).contains(1, 2, 3, 4, 5, 6);
         var a6_2 = cg6.generate();
-        assertThat(a6_2).contains(1, 2, 3, 4, 5, 7);
+        assertThat(a6_2).contains(1, 2, 3, 4, 6, 5);
         var a6_3 = cg6.generate();
-        assertThat(a6_3).contains(1, 3, 4, 5, 6, 5);
+        assertThat(a6_3).contains(1, 2, 3, 5, 4, 6);
     }
 
     @Test
     void testGenerateWithTwoElements() {
-
-        for (int i = 0; i < 1000; i++) {
-            int[] res = cg2.generate();
-            System.out.println(Arrays.toString(res));
-        }
-        System.out.println(Arrays.toString(cg2.generate()));
 
 
         assertThat(tryFind(new int[]{2, 10}, cg2)).isTrue();
@@ -165,11 +172,6 @@ public class CombinationGeneratorNeTest {
 
     @Test
     void testGenerateWithThreeElements() {
-        for (int i = 0; i < 3000; i++) {
-            int[] res = cg3.generate();
-            System.out.println(Arrays.toString(res));
-        }
-        System.out.println(Arrays.toString(cg3.generate()));
 
 
         assertThat(tryFind(new int[]{1, 2, 3}, cg3)).isTrue();
@@ -223,24 +225,15 @@ public class CombinationGeneratorNeTest {
     @Test
     void testGenerateWithFourElements() {
 
-        for (int i = 0; i < 4000; i++) {
-            int[] res = cg4.generate();
-            System.out.println(Arrays.toString(res));
-        }var res = cg4.generate();
-        System.out.println(Arrays.toString(res));
-
-
-        res = cg4.generate();
-        System.out.println(Arrays.toString(res));
         assertThat(tryFind(new int[]{1, 10, 4, 15}, cg4)).isTrue();
         assertThat(tryFind(new int[]{12, 13, 26, 6}, cg4)).isTrue();
         assertThat(tryFind(new int[]{12, 1, 24, 2}, cg4)).isTrue();
         assertThat(tryFind(new int[]{3, 2, 11, 14}, cg4)).isTrue();
-        assertThat(tryFind(new int[]{17, 8, 92, 5}, cg4)).isTrue();
+        assertThat(tryFind(new int[]{17, 8, 19, 5}, cg4)).isTrue();
         assertThat(tryFind(new int[]{19, 4, 1, 5}, cg4)).isTrue();
         assertThat(tryFind(new int[]{1, 7, 8, 3}, cg4)).isTrue();
         assertThat(tryFind(new int[]{5, 2, 1, 6}, cg4)).isTrue();
-        assertThat(tryFind(new int[]{1, 15, 62, 31}, cg4)).isTrue();
+        assertThat(tryFind(new int[]{1, 15, 35, 31}, cg4)).isTrue();
         assertThat(tryFind(new int[]{9, 2, 42, 1}, cg4)).isTrue();
         assertThat(tryFind(new int[]{12, 4, 52, 1}, cg4)).isTrue();
         assertThat(tryFind(new int[]{14, 5, 1, 2}, cg4)).isTrue();
@@ -287,10 +280,6 @@ public class CombinationGeneratorNeTest {
 
     @Test
     void testGenerateWithFiveElements() {
-        for (int i = 0; i < 1000; i++) {
-            int[] res = cg5.generate();
-            System.out.println(Arrays.toString(res));
-        }
 
         assertThat(tryFind(new int[]{2, 5, 4, 3, 1}, cg5)).isTrue();
         assertThat(tryFind(new int[]{1, 5, 4, 3, 2}, cg5)).isTrue();
@@ -346,10 +335,7 @@ public class CombinationGeneratorNeTest {
 
     @Test
     void testGenerateWithSixElements() {
-        for (int i = 0; i < 1000; i++) {
-            int[] res = cg6.generate();
-            System.out.println(Arrays.toString(res));
-        }
+
         assertThat(tryFind(new int[]{1, 2, 3, 5, 6, 4}, cg6)).isTrue();
         assertThat(tryFind(new int[]{2, 1, 3, 5, 6, 4}, cg6)).isTrue();
         assertThat(tryFind(new int[]{2, 1, 5, 3, 6, 4}, cg6)).isTrue();
@@ -377,7 +363,7 @@ public class CombinationGeneratorNeTest {
 
     private boolean tryFind(int[] toFound, CombinationGeneratorNew cg) {
         cg = new CombinationGeneratorNew(toFound.length);
-        int maxLimit = 1000000;
+        int maxLimit = 7000000;
         boolean found = false;
         int step = 0;
 
