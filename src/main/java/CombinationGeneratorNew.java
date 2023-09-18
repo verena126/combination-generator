@@ -8,13 +8,7 @@ public class CombinationGeneratorNew {
     private int secondLast;
     private int currentLimit;
     private int maxLimit;
-    private int currentIndex;
-    private int pos;
-    private int counter = 0;
-    private int maxPermutation = 1;
-    private int currentPermuationLimit;
     ArrayList<ArrayList<Integer>> results = new ArrayList<>();
-
     private boolean activateIterateThroughSecondLast = false;
 
 
@@ -22,22 +16,13 @@ public class CombinationGeneratorNew {
         this.size = size;
         if (size > 2) {
             currentLimit = size + 1;
-            currentPermuationLimit = size;
         } else {
             currentLimit = 1;
-
         }
         last = size;
         secondLast = size - 1;
         arr = setUpArray(size);
         maxLimit = size + 1;
-        currentIndex = size - 3;
-        //reachedNewLimit = size;
-        pos = size;
-        for (int i = 1; i <= arr.length; i++) {
-            maxPermutation *= i;
-        }
-
     }
 
     private static int[] setUpArray(int length) {
@@ -126,8 +111,6 @@ public class CombinationGeneratorNew {
         for (int i = 0; i < arr.length; i++) {
             nums.add(arr[i]);
         }
-//        System.err.println(Arrays.toString(arr));
-
         if (results.size() == 0) {
             boolean isTwice = false;
             for (int i = arr.length - 2; i >= 0; i--) {
@@ -139,8 +122,8 @@ public class CombinationGeneratorNew {
                             arr[j] = arr[i] + j;
                         }
                     } else if (i > 0 && i < arr.length - 2) {
-                        for (int j = i+1; j < arr.length - 1; j++) {
-                            arr[j] = arr[j-1] + 1;
+                        for (int j = i + 1; j < arr.length - 1; j++) {
+                            arr[j] = arr[j - 1] + 1;
                         }
                     }
                     break;
@@ -169,9 +152,7 @@ public class CombinationGeneratorNew {
             }
             results.remove(0);
             return array1;
-
         }
-
         return ArrayWithLengthMoreThanTwo();
     }
 
@@ -189,7 +170,6 @@ public class CombinationGeneratorNew {
             return;
         }
         for (int i = l; i <= h; i++) {
-
             // Swapping
             int left = nums.get(l);
             nums.set(l, nums.get(i));
@@ -246,6 +226,4 @@ public class CombinationGeneratorNew {
             return generateArrayWithLengthTwo();
         }
     }
-
-
 }
