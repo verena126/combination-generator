@@ -128,7 +128,6 @@ public class CombinationGeneratorNew {
                     }
                     break;
                 } else {
-
                     arr[i]--;
                 }
             }
