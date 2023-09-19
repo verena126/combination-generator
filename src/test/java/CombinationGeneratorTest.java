@@ -436,10 +436,10 @@ public class CombinationGeneratorTest {
         long startTime= System.currentTimeMillis();
         var cg = new CombinationGeneratorNew(toFound.length);
         boolean found = false;
-        int stoptime=5;
+        int stoptime=30;
 
         for(int i=1;i<toFound.length;i++){
-            stoptime*=10;
+            stoptime*=10*i;
         }
 
 
