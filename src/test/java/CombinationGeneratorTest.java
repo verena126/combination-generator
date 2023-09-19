@@ -1,12 +1,13 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Timeout;
 
 import java.util.Arrays;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
 public class CombinationGeneratorTest {
+
     private CombinationGeneratorNew cg1;
     private CombinationGeneratorNew cg2;
     private CombinationGeneratorNew cg3;
@@ -25,8 +26,6 @@ public class CombinationGeneratorTest {
         cg5 = new CombinationGeneratorNew(5);
         cg6 = new CombinationGeneratorNew(6);
         cg7 = new CombinationGeneratorNew(7);
-
-
     }
 
     @Test
@@ -41,7 +40,6 @@ public class CombinationGeneratorTest {
     void arrayIsInitalized() {
         var a1_1 = cg1.generate();
         assertThat(a1_1).contains(1);
-
         var a2_1 = cg2.generate();
         assertThat(a2_1).contains(1, 2);
         var a3_1 = cg3.generate();
@@ -54,13 +52,11 @@ public class CombinationGeneratorTest {
         assertThat(a6_1).contains(1, 2, 3, 4, 5, 6);
         var a7_1 = cg7.generate();
         assertThat(a7_1).contains(1, 2, 3, 4, 5, 6, 7);
-
     }
 
 
     @Test
     void testFirstElements() {
-
         var a2_1 = cg2.generate();
         assertThat(a2_1).contains(1, 2);
         var a2_2 = cg2.generate();
@@ -77,7 +73,6 @@ public class CombinationGeneratorTest {
         assertThat(a2_7).contains(3, 4);
         var a2_8 = cg2.generate();
         assertThat(a2_8).contains(1, 4);
-
     }
 
     @Test
@@ -98,7 +93,6 @@ public class CombinationGeneratorTest {
         assertThat(a3_7).contains(1, 2, 4);
         var a3_8 = cg3.generate();
         assertThat(a3_8).contains(1, 4, 2);
-
     }
 
     @Test
@@ -119,7 +113,6 @@ public class CombinationGeneratorTest {
 
     @Test
     void testFirstElementsForSizeFive() {
-
         var a5_1 = cg5.generate();
         assertThat(a5_1).contains(1, 2, 3, 4, 5);
         var a5_2 = cg5.generate();
@@ -150,8 +143,6 @@ public class CombinationGeneratorTest {
 
     @Test
     void testGenerateWithTwoElements() {
-
-
         assertThat(tryFind(new int[]{2, 10})).isTrue();
         assertThat(tryFind(new int[]{12, 4})).isTrue();
         assertThat(tryFind(new int[]{19, 1})).isTrue();
@@ -173,12 +164,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{7, 10})).isTrue();
         assertThat(tryFind(new int[]{18, 5})).isTrue();
         assertThat(tryFind(new int[]{18, 99})).isTrue();
-
     }
 
     @Test
     void testGenerateWithTwoElementsNegative() {
-
         assertThat(tryFind(new int[]{2, 2})).isFalse();
         assertThat(tryFind(new int[]{12, 12})).isFalse();
         assertThat(tryFind(new int[]{19, 19})).isFalse();
@@ -199,14 +188,11 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{11, 11})).isFalse();
         assertThat(tryFind(new int[]{28, 28})).isFalse();
         assertThat(tryFind(new int[]{30, 0})).isFalse();
-
     }
 
 
     @Test
     void testGenerateWithThreeElements() {
-
-
         assertThat(tryFind(new int[]{1, 2, 3})).isTrue();
         assertThat(tryFind(new int[]{3, 5, 7})).isTrue();
         assertThat(tryFind(new int[]{7, 1, 6})).isTrue();
@@ -232,7 +218,7 @@ public class CombinationGeneratorTest {
     }
 
     @Test
-    void testGenerateWithThreeElementsNegative() {
+    void testGenerateWithThreeElementsNegative()  {
         assertThat(tryFind(new int[]{3, 10, 3})).isFalse();
         assertThat(tryFind(new int[]{24, 1, 1})).isFalse();
         assertThat(tryFind(new int[]{1, 1, 33})).isFalse();
@@ -253,12 +239,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{9, 9, 3})).isFalse();
         assertThat(tryFind(new int[]{6, 17, 6})).isFalse();
         assertThat(tryFind(new int[]{8, 8, 23})).isFalse();
-
     }
 
     @Test
-    void testGenerateWithFourElements() {
-
+    void testGenerateWithFourElements()  {
         assertThat(tryFind(new int[]{1, 10, 4, 15})).isTrue();
         assertThat(tryFind(new int[]{12, 13, 26, 6})).isTrue();
         assertThat(tryFind(new int[]{12, 1, 24, 2})).isTrue();
@@ -282,12 +266,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{10, 20, 3, 1})).isTrue();
         assertThat(tryFind(new int[]{3, 89, 5, 23})).isTrue();
         assertThat(tryFind(new int[]{4, 3, 2, 1})).isTrue();
-
-
     }
 
     @Test
-    void testGenerateWithFourElementsNegative() {
+    void testGenerateWithFourElementsNegative()  {
         assertThat(tryFind(new int[]{1, 0, 32, 5})).isFalse();
         assertThat(tryFind(new int[]{55, 10, 4, 10})).isFalse();
         assertThat(tryFind(new int[]{24, 100, 99, 24})).isFalse();
@@ -310,13 +292,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{1, 14, 12, 1})).isFalse();
         assertThat(tryFind(new int[]{7, 7, 43, 2})).isFalse();
         assertThat(tryFind(new int[]{8, 2, 8, 1})).isFalse();
-
-
     }
 
     @Test
-    void testGenerateWithFiveElements() {
-
+    void testGenerateWithFiveElements()  {
         assertThat(tryFind(new int[]{2, 5, 4, 3, 1})).isTrue();
         assertThat(tryFind(new int[]{1, 5, 4, 3, 2})).isTrue();
         assertThat(tryFind(new int[]{3, 4, 5, 2, 1})).isTrue();
@@ -339,14 +318,11 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{4, 2, 12, 3, 6})).isTrue();
         assertThat(tryFind(new int[]{1, 5, 4, 16, 8})).isTrue();
         assertThat(tryFind(new int[]{4, 1, 10, 50, 2})).isTrue();
-
-
     }
 
 
     @Test
-    void testGenerateWithFiveElementsNegative() {
-
+    void testGenerateWithFiveElementsNegative()  {
         assertThat(tryFind(new int[]{55, 10, 4, 10, 1})).isFalse();
         assertThat(tryFind(new int[]{55, 5, 4, 55, 1})).isFalse();
         assertThat(tryFind(new int[]{5, 3, 4, 10, 3})).isFalse();
@@ -367,12 +343,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{3, 5, 2, 7, 3})).isFalse();
         assertThat(tryFind(new int[]{2, 3, 1, 8, 2})).isFalse();
         assertThat(tryFind(new int[]{1, 1, 4, 9, 15})).isFalse();
-
     }
 
     @Test
     void testGenerateWithSixElements() {
-
         assertThat(tryFind(new int[]{1, 2, 3, 5, 6, 4})).isTrue();
         assertThat(tryFind(new int[]{2, 1, 3, 5, 6, 4})).isTrue();
         assertThat(tryFind(new int[]{2, 1, 5, 3, 6, 4})).isTrue();
@@ -392,12 +366,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{4, 2, 12, 3, 6, 1})).isTrue();
         assertThat(tryFind(new int[]{1, 5, 4, 16, 8, 10})).isTrue();
         assertThat(tryFind(new int[]{25, 1, 2, 3, 4, 5})).isTrue();
-
-
     }
 
     @Test
-    void testGenerateWithSixElementsNegative() {
+    void testGenerateWithSixElementsNegative()  {
         assertThat(tryFind(new int[]{55, 10, 4, 10, 1, 2})).isFalse();
         assertThat(tryFind(new int[]{1, 9, 4, 7, 1, 3})).isFalse();
         assertThat(tryFind(new int[]{2, 3, 4, 3, 1, 5})).isFalse();
@@ -415,12 +387,10 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{3, 5, 2, 7, 3, 6})).isFalse();
         assertThat(tryFind(new int[]{2, 3, 1, 8, 2, 3})).isFalse();
         assertThat(tryFind(new int[]{1, 1, 4, 9, 15, 12})).isFalse();
-
     }
 
     @Test
-    void testGenerateWithSevenElements() {
-
+    void testGenerateWithSevenElements()  {
         assertThat(tryFind(new int[]{2, 3, 4, 1, 5, 6, 7})).isTrue();
         assertThat(tryFind(new int[]{1, 5, 2, 3, 9, 4, 6})).isTrue();
         assertThat(tryFind(new int[]{1, 2, 8, 3, 5, 10, 4})).isTrue();
@@ -435,11 +405,11 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{7, 1, 4, 3, 2, 5, 6})).isTrue();
         assertThat(tryFind(new int[]{4, 2, 12, 3, 6, 1, 5})).isTrue();
         assertThat(tryFind(new int[]{7, 6, 5, 4, 3, 2, 1})).isTrue();
-
     }
 
+
     @Test
-    void testGenerateWithSevenElementsNegative() {
+    void testGenerateWithSevenElementsNegative()  {
         assertThat(tryFind(new int[]{55, 10, 4, 10, 1, 2, 5})).isFalse();
         assertThat(tryFind(new int[]{1, 9, 4, 7, 1, 3, 0})).isFalse();
         assertThat(tryFind(new int[]{2, 3, 4, 3, 1, 5, 2})).isFalse();
@@ -457,17 +427,24 @@ public class CombinationGeneratorTest {
         assertThat(tryFind(new int[]{3, 5, 2, 7, 3, 6, 43})).isFalse();
         assertThat(tryFind(new int[]{2, 3, 1, 8, 2, 3, 23})).isFalse();
         assertThat(tryFind(new int[]{1, 1, 4, 9, 15, 12, 35})).isFalse();
-
     }
 
 
-    private boolean tryFind(int[] toFound) {
-        var cg = new CombinationGeneratorNew(toFound.length);
-        int maxLimit = 900000000;
-        boolean found = false;
-        int step = 0;
 
-        while (found == false & step < maxLimit) {
+
+    private boolean tryFind(int[] toFound) {
+        long startTime= System.currentTimeMillis();
+        var cg = new CombinationGeneratorNew(toFound.length);
+        boolean found = false;
+        int stoptime=5;
+
+        for(int i=1;i<toFound.length;i++){
+            stoptime*=10;
+        }
+
+
+        while (found == false ) {
+            long currentTime= System.currentTimeMillis();
             int[] res = cg.generate();
             found = false;
             for (int i = 0; i < toFound.length; i++) {
@@ -478,7 +455,9 @@ public class CombinationGeneratorTest {
                     break;
                 }
             }
-            step++;
+            if(currentTime-startTime >stoptime){
+                return false;
+            }
         }
         return found;
     }
@@ -518,7 +497,6 @@ public class CombinationGeneratorTest {
     private boolean checkIfTheSame(int currentLength) {
         int[] arr2;
         int[] arr3;
-
         CombinationGeneratorNew cg = new CombinationGeneratorNew(currentLength);
         CombinationGeneratorNew cg1 = new CombinationGeneratorNew(currentLength);
         for (int i = 0; i < 100; i++) {
@@ -527,7 +505,6 @@ public class CombinationGeneratorTest {
             for (int k = 0; k < arr2.length; k++) {
                 if (arr2[k] != arr3[k]) {
                     return false;
-
                 }
             }
         }
