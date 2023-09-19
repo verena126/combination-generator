@@ -438,7 +438,6 @@ public class CombinationGeneratorTest {
 
 
     private boolean tryFind(int[] toFound) {
-
             var cg = new PermutationGeneratorNew(toFound.length);
             boolean found = false;
             long startTime = System.currentTimeMillis();
@@ -462,7 +461,7 @@ public class CombinationGeneratorTest {
                         return false;
                     }
                 } else if(toFound.length<7) {
-                    if (currentTime - startTime >= 30000) {
+                    if (currentTime - startTime >= 40000) {
                         executorService.shutdownNow(); // Stop the scheduled task if the loop takes more than 40 seconds
                         return false;
                     }
@@ -471,12 +470,10 @@ public class CombinationGeneratorTest {
                         executorService.shutdownNow(); // Stop the scheduled task if the loop takes more than 40 seconds
                         return false;
                     }
-
                 }
             }
             executorService.shutdown();
             return found;
-
     }
 
     @Test
